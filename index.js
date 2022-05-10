@@ -3,6 +3,7 @@
 const express = require('express');
 const axios = require('axios');
 const app = express();
+const PORT = process.env.PORT || 7070;
 
 const getOrigin = (htmlData) => {
   const arr = htmlData.split('</tr><tr><th scope="row" class="infobox-label">Origin</th>');
@@ -31,6 +32,6 @@ app.get('/', (request, response) => {
   });
 });
 
-app.listen(7070);
+app.listen(PORT);
 console.log('Running...');
 
