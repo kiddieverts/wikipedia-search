@@ -9,19 +9,21 @@ const getDetailsHtml = (httpResponse) => {
   return htmlData;
 }
 
-// <[^>]*>
-
 const getOrigin = (htmlData) => {
   const arr = htmlData.split('</tr><tr><th scope="row" class="infobox-label">Origin</th>');
+  if (arr.length === 0) {
+    return 'finnst ekki'
+  }
   const end = arr[1];
-
   const ending = end.split('</td>');
   const x = ending[0];
-  return x;
+  const regex = /<[^>]*>/gi
+  const country = x.replace(regex, '');
+  return country;
 }
 
 app.get('/', (request, response) => {
-  const artist = 'The Lathums';
+  const artist = request.query.q;
   const url = `https://en.wikipedia.org/w/api.php?action=opensearch&search=${artist}&format=json`
 
   axios.get(url).then(result => {
