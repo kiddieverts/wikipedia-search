@@ -19,24 +19,31 @@ const getOrigin = (htmlData) => {
   return country;
 }
 
+// https://www.mediawiki.org/w/api.php
+
 app.get('/', (request, response) => {
-  const artist = encodeURI(request.query.q);
+  const artist = encodeURI(request.query.q) + ' band';
   // const url = `https://en.wikipedia.org/w/api.php?action=opensearch&search=${artist}&format=json`;
   const url = `https://en.wikipedia.org/w/index.php?search=${artist}+deepcat%3AArtist&title=Special:Search&profile=advanced&fulltext=1&advancedSearch-current=%7B%22fields%22%3A%7B%22deepcategory%22%3A%5B%22Artist%22%5D%7D%7D&ns0=1`
+
+  console.log('URL', url);
+
   axios.get(url)
     .then(result => {
       const detailsUrl = result.data[3][0];
+      response.send(result.data);
+
+
       if (!detailsUrl) {
-        return response.send('err1');
+        return response.send('Finnst allt ekki');
       } else {
         axios.get()
           .then(response => response.data)
           .then(htmlData => getOrigin(htmlData))
           .then(county => response.send(county))
-          .catch(err => response.send('err2'));
+          .catch(err => response.send('Önnur villa'));
       }
-    })
-    .catch(() => response.send('err 3'));
+    });
 })
 
 app.listen(PORT);
