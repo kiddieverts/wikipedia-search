@@ -21,8 +21,8 @@ const getOrigin = (htmlData) => {
 
 app.get('/', (request, response) => {
   const artist = encodeURI(request.query.q);
-  const url = `https://en.wikipedia.org/w/api.php?action=opensearch&search=${artist}&format=json`;
-
+  // const url = `https://en.wikipedia.org/w/api.php?action=opensearch&search=${artist}&format=json`;
+  const url = `https://en.wikipedia.org/w/index.php?search=${artist}+deepcat%3AArtist&title=Special:Search&profile=advanced&fulltext=1&advancedSearch-current=%7B%22fields%22%3A%7B%22deepcategory%22%3A%5B%22Artist%22%5D%7D%7D&ns0=1`
   axios.get(url)
     .then(result => {
       const detailsUrl = result.data[3][0];
