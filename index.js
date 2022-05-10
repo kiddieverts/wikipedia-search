@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 7070;
 const getOrigin = (htmlData) => {
   const arr = htmlData.split('</tr><tr><th scope="row" class="infobox-label">Origin</th>');
   if (arr.length < 2) {
-    return 'Finnst ekki';
+    return 'Fann ekki 3';
   }
   const a = arr[1];
   const b = a.split('</td>');
@@ -19,30 +19,26 @@ const getOrigin = (htmlData) => {
   return country;
 }
 
-// https://www.mediawiki.org/w/api.php
-
 app.get('/', (request, response) => {
-  const artist = encodeURI(request.query.q) + ' band';
-  // const url = `https://en.wikipedia.org/w/api.php?action=opensearch&search=${artist}&format=json`;
-  const url = `https://en.wikipedia.org/w/index.php?search=${artist}+deepcat%3AArtist&title=Special:Search&profile=advanced&fulltext=1&advancedSearch-current=%7B%22fields%22%3A%7B%22deepcategory%22%3A%5B%22Artist%22%5D%7D%7D&ns0=1`
+  const artist = encodeURI(request.query.q);
+  const listUrl = `https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&utf8=1&srsearch=${artist}%20band`;
 
-  console.log('URL', url);
-
-  axios.get(url)
+  axios.get(listUrl)
     .then(result => {
-      const detailsUrl = result.data[3][0];
-      response.send(result.data);
-
-
-      if (!detailsUrl) {
-        return response.send('Finnst allt ekki');
-      } else {
-        axios.get()
-          .then(response => response.data)
-          .then(htmlData => getOrigin(htmlData))
-          .then(county => response.send(county))
-          .catch(err => response.send('Önnur villa'));
+      const { data } = result;
+      if (!data || !data.query || !data.query.search) {
+        response.send('Fann ekki 1');
       }
+      const { search } = data.query;
+
+      if (search.length === 0) {
+        response.send('Fann ekki 2');
+      }
+
+      axios.get('https://en.wikipedia.org/?curid=' + search[0].pageid)
+        .then(x => getOrigin(x.data))
+        .then(x => response.send(x))
+        .catch(() => response.send('Villa'));
     });
 })
 
