@@ -9,6 +9,8 @@ const getDetailsHtml = (httpResponse) => {
   return htmlData;
 }
 
+// <[^>]*>
+
 const getOrigin = (htmlData) => {
   const arr = htmlData.split('</tr><tr><th scope="row" class="infobox-label">Origin</th>');
   const end = arr[1];
