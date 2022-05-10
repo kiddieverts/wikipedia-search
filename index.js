@@ -6,6 +6,8 @@ const app = express();
 const PORT = process.env.PORT || 7070;
 
 const getOrigin = (htmlData) => {
+  // TEST
+
   const arr = htmlData.split('</tr><tr><th scope="row" class="infobox-label">Origin</th>');
   if (arr.length < 2) {
     return 'Finnst ekki';
