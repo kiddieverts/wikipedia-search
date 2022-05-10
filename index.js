@@ -22,16 +22,21 @@ const getOrigin = (htmlData) => {
 }
 
 app.get('/', (request, response) => {
-  const artist = encodeURI(request.query.q);
-  const url = `https://en.wikipedia.org/w/api.php?action=opensearch&search=${artist}&format=json`;
+  try {
+    const artist = encodeURI(request.query.q);
+    const url = `https://en.wikipedia.org/w/api.php?action=opensearch&search=${artist}&format=json`;
 
-  axios.get(url).then(result => {
-    const detailsUrl = result.data[3][0];
-    axios.get(detailsUrl)
-      .then(response => response.data)
-      .then(htmlData => getOrigin(htmlData))
-      .then(county => response.send(county));
-  });
+    axios.get(url).then(result => {
+      const detailsUrl = result.data[3][0];
+      axios.get(detailsUrl)
+        .then(response => response.data)
+        .then(htmlData => getOrigin(htmlData))
+        .then(county => response.send(county));
+    });
+  }
+  catch {
+    response.send('Error');
+  }
 });
 
 app.listen(PORT);
