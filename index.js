@@ -13,7 +13,9 @@ const getOrigin = (htmlData) => {
   const arr = htmlData.split('</tr><tr><th scope="row" class="infobox-label">Origin</th>');
   const end = arr[1];
 
-  return end;
+  const ending = end.split('</td>');
+  const x = ending[0];
+  return x;
 }
 
 app.get('/', (request, response) => {
