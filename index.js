@@ -6,8 +6,6 @@ const app = express();
 const PORT = process.env.PORT || 7070;
 
 const getOrigin = (htmlData) => {
-  // TEST
-
   const arr = htmlData.split('</tr><tr><th scope="row" class="infobox-label">Origin</th>');
   if (arr.length < 2) {
     return 'Finnst ekki';
@@ -22,22 +20,24 @@ const getOrigin = (htmlData) => {
 }
 
 app.get('/', (request, response) => {
-  try {
-    const artist = encodeURI(request.query.q) || '.................';
-    const url = `https://en.wikipedia.org/w/api.php?action=opensearch&search=${artist}&format=json` || '';
+  const artist = encodeURI(request.query.q);
+  const url = `https://en.wikipedia.org/w/api.php?action=opensearch&search=${artist}&format=json`;
 
-    axios.get(url).then(result => {
+  axios.get(url)
+    .then(result => {
       const detailsUrl = result.data[3][0];
-      axios.get(detailsUrl)
-        .then(response => response.data)
-        .then(htmlData => getOrigin(htmlData))
-        .then(county => response.send(county));
-    });
-  }
-  catch {
-    response.send('Error');
-  }
-});
+      if (!detailsUrl) {
+        return response.send('err1');
+      } else {
+        axios.get()
+          .then(response => response.data)
+          .then(htmlData => getOrigin(htmlData))
+          .then(county => response.send(county))
+          .catch(err => response.send('err2'));
+      }
+    })
+    .catch(() => response.send('err 3'));
+})
 
 app.listen(PORT);
 console.log('Running...');
