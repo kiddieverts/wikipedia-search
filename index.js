@@ -21,7 +21,7 @@ const getOrigin = (htmlData) => {
 
 app.get('/', (request, response) => {
   const artist = encodeURI(request.query.q);
-  const listUrl = `https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&utf8=1&srsearch=${artist}%20band`;
+  const listUrl = `https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&utf8=1&srsearch=${artist}%20artist`;
 
   axios.get(listUrl)
     .then(result => {
